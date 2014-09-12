@@ -1,0 +1,86 @@
+#parse("/cc/constants.vm")
+#parse("/cc/header.vm")
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<div class="layout-content">
+    #parse("/cc/tree.vm")
+    <div class="right-tree pd0x10">
+  <div class="pd10x20" id="userPei">
+    <div class="page-title mb20"><i class="i_icon"></i> 用户列表<a href='/user/editUser.action' class="btn btn-primary fr">添加用户</a></div>
+    <div class="panel">
+      <div class="panel-header">
+      <div class="panel mt10 mb20" id="userInfo">
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+        <div class="pd10x20">
+            <div class="page-title mb20"><i class="i_icon"></i> 工程列表<a href='/project/editProject.action' class="btn btn-primary fr">添加工程</a></div>
+            <div class="panel">
+                <div class="panel-header">
+                    <!--<div>
+                        时间范围：<input type="text" class="input Wdate" id="bdate" name="bdate" onClick="WdatePicker()">&nbsp;到&nbsp;<input type="text" class="input Wdate" id="edate" name="edate" onClick="WdatePicker()">
+                        &nbsp;&nbsp;<span class="ml20">关键词：</span><input type="text" class="input">
+                        &nbsp;&nbsp;<a href="#" class="btn btn-primary"><i class="icon16 icon16-zoom"></i> 查询</a>
+                    </div>-->
+
+                    <div class="panel mt10 mb20">
+                        <table class="table table_bordered">
+                            <thead>
+                            <tr>
+                                <th width="90">工程ID</th>
+                                <th>工程名</th>
+                                <th width="60">&nbsp;</th>
+                                <th width="60">&nbsp;</th>
+                                <th width="60">&nbsp;</th>
+##                                <th width="60" style="padding-left:15px;">&nbsp;</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                                #foreach($project in $data.projectList)
+                                <tr>
+                                    <td>$project.id</td>
+                                    <td>$!utils.escapeInH($project.name)</td>
+                                    <td class="i-operate"><a href="/project/editProject.action?reqParam.projectId=$project.id&authCheck=$sysUtils.encryptAuthCheck($request,$project.id)">编辑</a></td>
+                                    <td class="i-operate"><a href="/project/delProject.action?reqParam.projectIds[0]=$project.id&authCheck=$sysUtils.encryptAuthCheck($request,$project.id)">删除</a></td>
+                                    <td class="i-operate"><a href="/env/listEnv.action?reqParam.projectId=$project.id&authCheck=$sysUtils.encryptAuthCheck($request,$project.id)">管理环境</a></td>
+##                                    <td class="i-operate"><a href="/access/accessSettingList.action?reqParam.projectId=$project.id&authCheck=$sysUtils.encryptAuthCheck($request,$project.id)">管理权限</a></td>
+                                </tr>
+                                #end
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td class="i-operate"></td>
+                                <td class="i-operate"></td>
+                                <td class="i-operate"></td>
+##                                <td class="i-operate"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        #parse("/cc/paging.vm")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        jQuery(function(){
+            
+            var uname = jQuery.cookie('rcc_name');
+            if(uname != 'admin'){
+                jQuery('#userPei').hide();
+            }else {
+                jQuery.ajax({
+                url: '/user/listUser.action',
+                success: function(data){
+                    jQuery('#userInfo').html(data);
+                }
+            })
+                jQuery('#userPei').show();
+            }
+        });
+    </script>
+#parse("/cc/footer.vm")

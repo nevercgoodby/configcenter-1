@@ -1,0 +1,75 @@
+#parse("/cc/constants.vm")
+#parse("/cc/header.vm")
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<div class="layout-content">
+    #parse("/cc/tree.vm")
+    <div class="right-tree pd0x10">
+        
+        <div class="pd10x20">
+    <div class="page-title mb20"><i class="i_icon"></i> $!utils.escapeInH(${data.project.name})-$!utils.escapeInH(${data.env.name})->版本列表<a class="btn btn-primary fr" href="/version/editVersion.action?reqParam.envId=$data.env.id&reqParam.projectId=$data.project.id&authCheck=$sysUtils.encryptAuthCheck($request,$data.project.id)">添加版本</a></div>
+    <div class="panel">
+      <div class="panel-header">
+        <!--<div> 
+            时间范围：<input type="text" class="input Wdate" id="bdate" name="bdate" onClick="WdatePicker()">&nbsp;到&nbsp;<input type="text" class="input Wdate" id="edate" name="edate" onClick="WdatePicker()">          
+            &nbsp;&nbsp;<span class="ml20">关键词：</span><input type="text" class="input">
+            &nbsp;&nbsp;<a href="#" class="btn btn-primary"><i class="icon16 icon16-zoom"></i> 查询</a>
+        </div>-->
+      
+      <div class="panel mt10 mb20">
+        <table class="table table_bordered">
+          <thead>
+            <tr>
+              <th width="90">ID</th>
+              <th>名称</th>
+              <th width="60">&nbsp;</th>
+              <th width="60">&nbsp;</th>
+              <th width="60" style="padding-left:15px;">&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+          #foreach($v in $data.versionList)
+		        <tr>
+		            <td>$v.id</td>
+		            <td>$!utils.escapeInH($v.name)</td>
+		            <td><a href="/version/editVersion.action?reqParam.versionId=$v.id&authCheck=$sysUtils.encryptAuthCheck($request,$data.project.id)">编辑</a></td>
+		            <td><a href="#" onclick="return doDele('$v.id')">删除</a></td>
+		            <td><a href="/configGroup/listConfigGroup.action?reqParam.versionId=$v.id&authCheck=$sysUtils.encryptAuthCheck($request,$data.project.id)">管理分组配置</a></td>
+		            <td><a href="/version/pushChange.action?reqParam.versionId=$v.id&authCheck=$sysUtils.encryptAuthCheck($request,$data.project.id)">推送变更</a></td>
+		        </tr>
+		    #end
+            <tr>
+		        <td></td>
+		        <td></td>
+		        <td class="i-operate"></td>
+		        <td class="i-operate"></td>
+		        <td class="i-operate"></td>
+		    </tr>
+          </tbody>
+        </table>
+        #parse("/cc/paging.vm")
+      </div>
+    </div>
+  </div>
+    </div>
+    <script>
+    ///version/delVersion.action?reqParam.versionId=$v.id
+  function doDele(id){
+  		if(confirm('确认删除？')){
+		    jQuery.getJSON("/version/delVersion.action", 
+		  			{
+                        'reqParam.versionId': id,
+                        'authCheck': '$sysUtils.encryptAuthCheck($request,$data.project.id)'
+                    },
+		  			function(json){
+		  				if(json.status!=0){
+			  				alert("服务器端异常请联系管理员！！");
+					  	}else{
+						  	window.location.href='/version/listVersion.action?reqParam.environmentId=$!data.env.id&reqParam.projectId=$!data.project.id&authCheck=$sysUtils.encryptAuthCheck($request,$data.project.id)';
+					}
+			});
+		}
+		return false;
+	}
+	</script>
+</div>
+#parse("/cc/footer.vm")

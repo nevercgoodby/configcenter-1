@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans default-autowire="byName">
+	<bean id="autoProxyCreator"
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<list>
+				<value>testBean</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+		 <list>
+			<value>regexpMethodPointcutAdvisor</value>
+		</list>
+		</property>
+	</bean>
+	<bean id="regexpMethodPointcutAdvisor"
+		class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+		<property name="advice">
+			<ref local="logAdvice" />
+		</property>
+		<property name="patterns">
+			<list>
+				<value>.*test.+</value>
+				<value>.*test2.+</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="logAdvice" class="com.baidu.rigel.service.log.impl.LogAdvice">
+		<property name="logFormator">
+			<bean class="com.baidu.rigel.service.log.impl.LogFormatorImpl" scope="prototype">
+				<property name="logLevel">
+					<value>info</value>
+				</property>
+				<property name="logType">
+					<value>auto</value>
+				</property>
+				<property name="maxSize">
+					<value>500</value>
+				</property>
+			</bean>
+		</property>
+		<property name="logLevel">
+			<value>info</value>
+		</property>
+
+		<property name="loggerName">
+			<value>support</value>
+		</property>
+	</bean>
+	
+	<bean id="logTemplate"
+	       class="com.baidu.rigel.service.log.impl.LogTemplateImpl">
+	       	<property name="logTemplateMap">
+				<map>
+					<entry>
+						<key><value>info.auto</value></key>
+						<value>[UUID=${UUID}][UID=${UID}][IP=${IP}][CNAME=${CNAME}][MNAME=${MNAME}][SPEND=${SPEND}][${PARAMS}]</value>
+					</entry>
+					<entry>
+						<key><value>info.manual</value></key>
+						<value>[UUID=${UUID}][UID=${UID}][IP=${IP}][CNAME=${CNAME}][MNAME=${MNAME}][BUSI_INFO=${BUSI_INFO}]</value>
+					</entry>
+				</map>
+			</property>
+	</bean>
+	<!-- 手工日志组件配置 -->
+	<bean id="manualLogFormator" class="com.baidu.rigel.service.log.impl.LogFormatorImpl">
+				<property name="logLevel">
+					<value>info</value>
+				</property>
+				<property name="logType">
+					<value>manual</value>
+				</property>
+				<property name="maxSize">
+					<value>500</value>
+				</property>	
+	</bean>
+	<bean id="rigelLog" class="com.baidu.rigel.service.log.impl.RigelLogImpl" scope="prototype">
+		<!-- 日志格式处理器 -->
+		<property name="logFormator">
+			<ref local="manualLogFormator"/>
+		</property>
+		<!-- 自定义配置文件位置 -->
+		<property name="logProsLoader">
+			<ref local="logProsLoader"/>
+		</property>
+		<property name="logLevel">
+			<value>info</value>
+		</property>
+		<property name="loggerName">
+			<value>support</value>
+		</property>
+	</bean>
+	
+	<bean id="logProsLoader" class="com.baidu.rigel.service.log.impl.LogProsLoaderImpl">
+		<property name="prosFilePath"><value>conf/myLog.properties</value></property>
+	</bean>
+	
+</beans>

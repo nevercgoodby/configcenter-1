@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans 
+			http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!-- 配置文件   加载所有的配置文件 -->
+	<bean id="propertyConfigurer" class="com.baidu.bjf.beans.config.JndiPropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/conf/local/jdbc-mysql.properties</value>
+				<value>classpath:/conf/local/memcache.properties</value>
+				<value>classpath:/conf/local/*_conf.properties</value>
+			</list>
+		</property>
+		<!-- <property name="jndiLocations">
+			<list>
+				<value>configcenter_memcache</value>
+				<value>configcenter_jdbc</value>
+				<value>configcenter_usercenter</value>
+				<value>configcenter_tinyse</value>
+				<value>configcenter/web/parameterSecurity</value>
+				<value>configcenter/web/casCheckFilter</value>
+				<value>configcenter/web/userInfoCheckFilter</value>
+				<value>configcenter/web/authCheckFilter</value>
+				<value>configcenter/web/logOutFilter</value>				
+			</list>		
+		</property> -->
+		<property name="replaceDuplicateByJndi" value="true"></property> <!-- default is true -->
+		<!-- <property name="propertyResolvedInterceptor" ref="propertyResolvedInterceptor"></property> -->
+	</bean>
+	
+<!--	
+	<bean id="propertyResolvedInterceptor" class="com.baidu.bjf.security.config.SecurityPropertyResolvedInterceptor">
+		<property name="encryptionHandler" ref="securityPlaceholderResolved"></property>
+		<property name="securityPrefix" value="%{"></property>
+		<property name="securitySuffix" value="}"></property>
+	</bean>
+	
+	<bean id="securityPlaceholderResolved" class="com.baidu.bjf.security.config.SecurityPlaceholderResolved">
+		<property name="securityId" value="29"></property>
+		<property name="securityService" ref="securityClientLB"></property>
+	</bean>
+	
+	<bean id="securityClient2" class="com.baidu.rigel.security.thrift.client.spring.SecurityClientProxyFactoryBean">
+	   <property name="host" value="tc-crm-rd01.tc.baidu.com"></property>
+	   <property name="port" value="8919"></property>
+	   <property name="user" value="user1"></property>
+	   <property name="password" value="abc"></property>
+	</bean>
+	
+
+	<bean id="securityClientLB" class="com.baidu.bjf.lb.LoadBalanceProxyFactoryBean">
+		<property name="serviceInterface" value="com.baidu.rigel.security.interfaces.SecurityService"></property>
+
+		<property name="targetBeans">
+			<map key-type="java.lang.String">
+				<entry key="securityClient_1" value-ref="securityClient2" />
+				<entry key="securityClient_2" value-ref="securityClient2" />
+			</map>
+		</property>
+		<property name="loadBalanceStrategy">
+			<bean
+				class="com.baidu.bjf.lb.strategy.RoundRobinLoadBalanceStrategy">
+				<constructor-arg>
+					<map key-type="java.lang.String" value-type="java.lang.Integer">
+						<entry key="securityClient_1" value="1" />
+						<entry key="securityClient_2" value="1" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</property>
+		<property name="failOverInterceptor">
+			<bean class="com.baidu.bjf.lb.remoting.failover.socket.SocketFailOverInterceptor">
+				<property name="recoverServiceUrls">
+					<map key-type="java.lang.String">
+						<entry key="securityClient_1" value="tc-crm-rd01.tc.baidu.com:8919" />
+						<entry key="securityClient_2" value="tc-crm-rd01.tc.baidu.com:8919" />
+					</map>
+				</property>
+			</bean>
+		</property>
+		<property name="heartBeat" value="true">
+		</property>
+		<property name="recoverInterval" value="5000"></property>
+	</bean>	
+-->	
+</beans>

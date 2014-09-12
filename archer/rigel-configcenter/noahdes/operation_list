@@ -1,0 +1,12 @@
+---
+END:
+  - "EXECUTE_CMD:echo \"start log-platform tomcat___________________________\""
+  - 'EXECUTE_CMD:/home/work/local/tomcat/bin/tomcat_control start'
+MAIN:
+  - DERIVE_CONF
+  - CALL_CONTROL:stop
+  - BACKUP_AND_DEPLOY:TRUE
+  - CALL_CONTROL:start
+PREPARE:
+  - "EXECUTE_CMD:echo \"start to deploy log-platform-web__________________________\""
+  - 'EXECUTE_CMD:/home/work/local/tomcat/bin/tomcat_control stop'

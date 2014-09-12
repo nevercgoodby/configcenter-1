@@ -1,0 +1,75 @@
+#parse("/cc/constants.vm")
+#parse("/cc/header.vm")
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<div class="layout-content">
+    #parse("/cc/tree.vm")
+    <div class="right-tree pd0x10">
+        
+        <div class="pd10x20">
+    <div class="page-title mb20"><i class="i_icon"></i> $!utils.escapeInH(${data.project.name})环境列表<a href='/env/editEnv.action?reqParam.projectId=$data.project.id&authCheck=$sysUtils.encryptAuthCheck($request,$data.project.id)' class="btn btn-primary fr">添加环境</a></div>
+    <div class="panel">
+      <div class="panel-header">
+        <!--<div> 
+            时间范围：<input type="text" class="input Wdate" id="bdate" name="bdate" onClick="WdatePicker()">&nbsp;到&nbsp;<input type="text" class="input Wdate" id="edate" name="edate" onClick="WdatePicker()">          
+            &nbsp;&nbsp;<span class="ml20">关键词：</span><input type="text" class="input">
+            &nbsp;&nbsp;<a href="#" class="btn btn-primary"><i class="icon16 icon16-zoom"></i> 查询</a>
+        </div>-->
+      
+      <div class="panel mt10 mb20">
+        <table class="table table_bordered">
+          <thead>
+            <tr>
+              <th width="90">环境ID</th>
+              <th>环境名称</th>
+              <th width="60">&nbsp;</th>
+              <th width="60">&nbsp;</th>
+              <th width="60" style="padding-left:15px;">&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+          
+          #foreach($env in $data.envList)
+		    <tr>
+		        <td>$env.id</td>
+		        <td>$!utils.escapeInH($!data.project.name) - $!utils.escapeInH($env.name)</td>
+		        <td class="i-operate"><a href="/env/editEnv.action?reqParam.environmentId=$env.id&authCheck=$sysUtils.encryptAuthCheck($request,$data.project.id)">编辑</a></td>
+		        <td class="i-operate"><a href="#" onclick="return doDele('$env.id')">删除</a></td>
+		        <td class="i-operate"><a href="/version/listVersion.action?reqParam.environmentId=$env.id&authCheck=$sysUtils.encryptAuthCheck($request,$data.project.id)">管理版本</a></td>
+		    </tr>
+		    #end
+            <tr>
+		        <td></td>
+		        <td></td>
+		        <td class="i-operate"></td>
+		        <td class="i-operate"></td>
+		        <td class="i-operate"></td>
+		    </tr>
+          </tbody>
+        </table>
+        #parse("/cc/paging.vm")
+      </div>
+    </div>
+  </div>
+  <script>
+  ///env/delEnv.action?reqParam.environmentId=$env.id
+  function doDele(id){
+  		if(confirm('确认删除？')){
+		    jQuery.getJSON("/env/delEnv.action", 
+		  			{
+                        'reqParam.environmentId': id,
+                        'authCheck': '$sysUtils.encryptAuthCheck($request,$data.project.id)'
+                    },
+		  			function(json){
+		  				if(json.status!=0){
+			  				alert("服务器端异常请联系管理员！！");
+					  	}else{
+						  	window.location.href='/env/listEnv.action?reqParam.projectId=$data.project.id&authCheck=$sysUtils.encryptAuthCheck($request,$data.project.id)';
+					}
+			});
+		}
+		return false;
+	}
+  </script>
+    </div>
+</div>
+#parse("/cc/footer.vm")

@@ -1,0 +1,63 @@
+#!/bin/bash
+
+#* --------------------------------------------------------------------- */
+#* Function    : Return Code                                             */
+#* Description : Return operate result according to code.                */
+#* --------------------------------------------------------------------- */
+
+end_cmd (){
+        exit $1
+}
+
+end_rc=0
+
+if [ $# -ne 1 ]
+then
+	end_cmd 11
+fi
+
+#* --------------------------------------------------------------------- */
+#* Function    : Start Function                                          */
+#* Description : Start the Application Server.                           */
+#* --------------------------------------------------------------------- */
+
+_start() {
+
+	echo `date +%F' '%H:%M:%S`"  --  iii Now begin to start Application server..."
+
+	# Startup and wait "Server startup"
+	/home/work/local/tomcat/bin/tomcat_control restart
+	echo "start sucess"
+	
+}
+
+#* --------------------------------------------------------------------- */
+#* Function    : Stop Function                                           */
+#* Description : Stop the Application Server.                            */
+#* --------------------------------------------------------------------- */
+
+_stop() {
+
+	echo `date +%F' '%H:%M:%S`"  --  iii Now begin to stop Application server..."
+
+	# Shutdown
+	/home/work/local/tomcat/bin/tomcat_control stop
+	echo "stop success"
+
+}
+
+#* --------------------------------------------------------------------- */
+#* Function    : MAIN Function                                           */
+#* --------------------------------------------------------------------- */
+main() {
+	case $1 in
+	start)
+			_start;;
+	stop)
+			_stop;;
+	*)
+			end_cmd 11;;
+	esac
+}
+
+main $@
